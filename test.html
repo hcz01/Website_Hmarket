@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+    }
+
+    .popup-content {
+      background-color: #fff;
+      width: 300px;
+      padding: 20px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .close {
+      float: right;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="openPopup()">打开弹窗</button>
+
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <span class="close" onclick="closePopup()">&times;</span>
+      <h2>弹窗标题</h2>
+      <p>这是弹窗的内容。</p>
+    </div>
+  </div>
+
+  <script>
+    function openPopup() {
+      var popup = document.getElementById("popup");
+      popup.style.display = "block";
+
+      // 添加点击窗口外部关闭弹窗的事件监听器
+      popup.addEventListener("click", closePopupOutside);
+      // 添加按下 ESC 键关闭弹窗的事件监听器
+      document.addEventListener("keydown", closePopupEsc);
+    }
+
+    function closePopupOutside(event) {
+      var popup = document.getElementById("popup");
+      if (event.target === popup) {
+        closePopup();
+      }
+    }
+
+    function closePopupEsc(event) {
+      if (event.key === "Escape") {
+        closePopup();
+      }
+    }
+
+    function closePopup() {
+      var popup = document.getElementById("popup");
+      popup.style.display = "none";
+
+      // 移除事件监听器
+      popup.removeEventListener("click", closePopupOutside);
+      document.removeEventListener("keydown", closePopupEsc);
+    }
+  </script>
+</body>
+</html>

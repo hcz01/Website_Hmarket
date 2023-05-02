@@ -1,0 +1,6 @@
+# Turn rewrite engine on
+Options +FollowSymlinks
+RewriteEngine on
+
+# map neat URL to internal URL like ?tab=selling&page_num=1&category=agent_team_ct
+RewriteRule ^Merket/(\?|\&)([^=]+)\=([^&]+)/$   RestController.php?tab=single&page_num=$1 [nc,qsa]

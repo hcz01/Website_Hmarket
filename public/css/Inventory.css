@@ -1,0 +1,90 @@
+#header{
+    background-color: aqua;
+    padding:8px;
+    
+}
+#header div{
+    display: inline-block;
+}
+#logo,#nav{  
+        
+    left:20%;
+}
+#nav-1{
+    position: absolute;     
+    right:5%;
+}
+#header ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+#header ul li {
+    display: inline-block;
+    font-size: 20px;
+    padding: 10px;
+  }
+  #Button{
+    background-color: grey;
+    text-align: center;
+}
+#Info {
+    background-image: url("../background/footer-bg.jpg");
+    background-size: cover;
+    background-position: center center;
+    height: 440px;
+    width:100%;
+    
+}
+
+#guide{
+    width: 1200px;
+    height: 256px;
+    padding: 50px 0px 20px 300px;
+    display: flex;
+    color: #fff;
+}
+
+.info-section {
+    flex: 1;
+}
+
+.info-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.info-section ul li {
+    margin-bottom: 5px;
+}
+
+#Button{
+    background-color: grey;
+    text-align: center;
+}
+#list_card{
+    text-align: center; 
+}
+
+.card {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+        
+}
+.ul_card{
+    display: inline-block;
+
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+.card img {
+    max-width: 100%;
+}

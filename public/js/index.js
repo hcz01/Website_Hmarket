@@ -124,7 +124,7 @@ function verifyUser(){
   $.ajax({
     url: '../app/Controller/ConfirmUser.php',
     dataType: "json",
-    method: 'GET',
+    method: 'post',
     data: {
       username: username,
       password: password

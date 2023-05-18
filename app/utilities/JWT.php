@@ -1,70 +1,44 @@
 <?php
-namespace app\utilities;
-use app\models\userModel;
-use ReallySimpleJWT\Token;
 
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 require_once(__DIR__ . "/../../vendor/autoload.php");
+$key = 'example_key';
+$payload = [
+    'iss' => 'http://example.org',
+    'aud' => 'http://example.com',
+    'iat' => 1356999524,
+    'nbf' => 1357000000
+];
 
-class JWT{
+/**
+ * IMPORTANT:
+ * You must specify supported algorithms for your application. See
+ * https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40
+ * for a list of spec-compliant algorithms.
+ */
+$jwt = JWT::encode($payload, $key, 'HS256');
+print_r($jwt);
+$decoded = JWT::decode($jwt, new Key($key, 'HS256'));
 
-    private const SECRET = '0$c@rCh3$$Pl@tf0rm';
-    private const ISSUER = '192.168.1.16';
-    /**
-     * Creates a JWT token for a user and sets it as a cookie with a one hour expiration
-     * time.
-     * 
-     * @param UserModel userModel  Is an instance of the UserModel class, which represents a
-     * user in the system. It contains information about the userand is used to create a JWT token for the user.
-     */
-    public static function createToken(UserModel $userModel): void
-    {
-        $token = Token::create($userModel->getIdUser(), self::SECRET, time()+ 3600, self::ISSUER);
-        setcookie("jwt", $token, time()+ 3600, '/', '', true, true);
-    }
-    /**
-     * Validates a jwt and if the jwt isn't valid it redirects the user
-     * to the login page
-     * 
-     * @param string jwt The jwt that needs to be validated.
-     * 
-     * @return bool Returns true on validation and false on error
-     */
-    public static function validate(?string $token): bool
-    {
-        if($token){
-            if(!Token::validate($token, self::SECRET)){
-                unset($_COOKIE['jwt']);
-                setcookie('jwt', null, -1, '/'); 
-                return false;
-            }
-            else{
-                return true;
-            }
-        }
-        return false;
-        
-    }
-    public static function deleteToken(): void
-    {
-        unset($_COOKIE['jwt']);
-        setcookie('jwt', null, -1, '/');
-    }
-    /**
-     * Returns the payload of a given token
-     * 
-     * @param string token The parameter "token" is a string variable that represents a token. This
-     * function is used to get the payload of the token.
-     * 
-     * @return array payload of a token, which is obtained by calling the `getPayload` method of the
-     * `Token` class with the provided token as its argument.
-     */
-    public static function getPayload(?string $token): array
-    {
-        return Token::getPayload($token);
-    }
-    public static function updateTime(string $token): void
-    {
-        setcookie("jwt", $token, time()+ 3600, '/', 'localhost', true, true);
-    }
-}
+print_r($decoded);
+
+/*
+ NOTE: This will now be an object instead of an associative array. To get
+ an associative array, you will need to cast it as such:
+*/
+
+$decoded_array = (array) $decoded;
+
+/**
+ * You can add a leeway to account for when there is a clock skew times between
+ * the signing and verifying servers. It is recommended that this leeway should
+ * not be bigger than a few minutes.
+ *
+ * Source: http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html#nbfDef
+ */
+JWT::$leeway = 60; // $leeway in seconds
+$decoded = JWT::decode($jwt, new Key($key, 'HS256'));
+
+
 ?>

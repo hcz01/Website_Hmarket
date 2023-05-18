@@ -2,6 +2,16 @@
   <div class="popup-content">
     <div class="Page_close" onclick="closePopup()">X</div>
     <div id="log">
+
+    <?php
+
+
+
+use Firebase\JWT\JWT;
+
+require_once('../vendor/autoload.php');
+?>
+
         <form action="home" method="post">
             <p2>Account Login/Regist</p2>
             <div class="form-group">

@@ -1,28 +1,27 @@
 <?php
-
+use ReallySimpleJWT\Token;
+require_once(__DIR__ . "/../../../vendor/autoload.php");
 //element for database 
   $servername = "localhost";
-  $username = "user";
+  $username = "root";
   $password = "";
   $db = "hmarket";
-  $conn = mysqli_connect($servername, $username, $password,$db);
-  $redirect_url="../";
-//element for JWT
+  $connection = new \mysqli($servername, $username, $password, $db);
+  if ($connection->connect_error) {
+    die("Connection failed: " . $connection->connect_error);
+}
+  //element for JWT
   $secret = 'lavoro';
   $expiration = time() + 3600;
   $issuer = 'localhost';
   $userId = "0";
 
+    $user =$_GET['username'];
+    $pass = $_GET['password'];
 
-  if (!empty($_POST['user']) && !empty($_POST['pass'])) {
-    $user = $_POST['user'];
-    $pass = $_POST['pass'];
-
-    $sql = "SELECT id_user FROM `user` WHERE username =? AND password =? ";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $user, $pass);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $sql = "SELECT id_user FROM `user` WHERE username='$user' AND password ='$pass' ";
+ 
+    $result = $connection->query($sql);;
     $data = array();
     if ($result->num_rows > 0) {
       // found user in this moment
@@ -30,19 +29,20 @@
         foreach ($row as $r) {
           if(is_numeric($r))
           {
-            $userId = $r;
-
-           
-          header("Location: $redirect_url"); 
-            exit(); 
+            $myobj = new stdClass();
+            $myobj->userid = $r;
+            $myobj->username=$user;
+            $data[] = $myobj;
           }
-      }
-            
+      }     
+    }else{
+      //didnt find user
+      $myobj->result= "failed";
+      $data[] = $myobj;
     }
-} else {
-    echo "Errore: Nome utente o password mancanti.";
-}
 
+$json_data = json_encode($data);
 
-$conn->close();
+echo $json_data;
+
 

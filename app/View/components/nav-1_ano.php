@@ -2,7 +2,6 @@
         <ul>
        
         <li><button onclick="redirect_inventory()">Inventory</button></li>
-            <li><button onclick="openPopup()">Login/Regist</button></li>
-            <li><a  href="">Login with Steam</a></li>
+            <li id="ano_login"><button onclick="openPopup()">Login/Regist</button> <a  href="">Login with Steam</a></li>
         </ul>
     </div>

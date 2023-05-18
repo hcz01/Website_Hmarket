@@ -14,8 +14,10 @@ $(document).ready(function(){
                 cards.push(element);
             });
             buildItem(cards);
-      }});  
-     
+      }}
+      
+      ); 
+
 });
 
 //GET ./Database/Viewitems.php?random=20  return 20 random items info
@@ -112,4 +114,36 @@ function truncateText(text, maxLength) {
     window.location="./Inventory.php";
   }
    
+ //ajax part 
+ // login user
+       
+function verifyUser(){
+  var username = $("#username").val();
+  var password = $("#password").val();
+  
+  $.ajax({
+    url: '../app/Controller/ConfirmUser.php',
+    dataType: "json",
+    method: 'GET',
+    data: {
+      username: username,
+      password: password
+    },
+    success: function(response) {
+      console.log(response);
+         /*   var parsedData = JSON.parse(data);
+            parsedData.forEach(element => {
+                $("ano_login").html=element['username']; 
+            });
+            */
+    },
+    error: function(data) {
+      alert("Login failed");
+    }
+  });
+}
+
+
+
+
  

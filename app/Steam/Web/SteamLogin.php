@@ -1,5 +1,4 @@
 <?php
-namespace App\Steam\web;
 
 class SteamLogin
 {

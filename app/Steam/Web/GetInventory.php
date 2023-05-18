@@ -1,45 +1,49 @@
 <?php 
  
- //namespace App\Steam\web;
- use app\models\itemModel;
- use app\models\InventoryModel;
- 
-//https://steamcommunity.com/inventory/76561199125042505/730/2?l=en&count=1000
- class Inventory{
-   private $API="https://api.csgofloat.com/?url=";
-    public function GetInventory(){
-    
-        header("Content-Type: application/json");
-        $json = file_get_contents("https://steamcommunity.com/inventory/76561199125042505/730/2?l=en&count=1000");
-        $obj = json_decode($json,true);
-        $descriptions=$obj["descriptions"];
-        $count=$obj["total_inventory_count"];
-        echo $count;
-        /*
-        if($count>0)
-           {
-            foreach ($descriptions as $description) {
-               array_push($steam_link, $description["market_actions"]["link"]);
-            }
-            return $steam_link; 
-    }
-    */
-    return null;
-   
+ namespace App\Steam\web;
+ use app\Controller\HanderDatabase;
+ include "Inventory.php";
+ require_once(__DIR__ . "/../../../vendor/autoload.php");
+// Usage example
+//1. GetProxy()  GetInventoryUrl() from handerdatabase 
+//2. getInventory() from CSGOInventory;
+$Data = new HanderDatabase();
+$steamid=$Data->getSTEAMID(1);
+$inventoryUrl = "https://steamcommunity.com/inventory/" . $steamid . "/730/2?l=en&count=1000";
+$proxyData = $Data->GetProxy();
+$JsonData = json_decode($proxyData);
+$proxy = $JsonData[0]->ip;
+$port = $JsonData[0]->port;
 
- }
-
-   public function GetItemsInfo($links){
-         $items=array();
-         foreach($links as $link){
-         $url=$this->API . $link;
-            $json = file_get_contents($url);
-            $data = json_decode($json,true);
-            
-
-         }
-      
- }
+$inventory = new CSGOInventory($inventoryUrl,$proxy,$port);
+$result = $inventory->getAllItems($inventory->getInventory());
+if($result!=null){
+$result=json_decode($result,true);
+    $output = array();
+// Output the result 
+foreach ($result as $item) {
+   if (isset($item['market_actions']) && isset($item['market_actions'][0]['link'])) {
+      $link = $item['market_actions'][0]['link'];
+  }
+    $items = array(
+      'classid' => $item['classid'] ?? null,
+      'instanceid' => $item['instanceid'] ?? null,
+      'market_name' => $item['market_name'] ?? null,
+      'name' => $item['name'] ?? null,
+      'icon_url' => $item['icon_url'] ?? null,
+      'icon_url_large' => $item['icon_url_large'] ?? null,
+      'link' => $link
+    );
+    $output[] = $items;
 }
 
+$jsonOutput = json_encode($output);
+
+// Output the JSON
+echo $jsonOutput;
+}else{
+    echo "failed";
+}
 ?>
+
+

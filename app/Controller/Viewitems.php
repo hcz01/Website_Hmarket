@@ -6,7 +6,7 @@
   $db = "hmarket";
   $conn = mysqli_connect($servername, $username, $password,$db);
   $ALL_TABLE_SKIN="`agents`,`collections`,`crates`,`graffiti`,`keys`,`music-kits`,`patches`,`skins`,`stickers`"; //no `collectibles`
-  $sql = "select SUBSTRING_INDEX(skins.id, '-', -1) AS id,name, image from `skins`";
+  $sql = "select id,name, image from `skins`";
 if(!empty($_GET['random']))
 {
   $sql.="ORDER BY RAND() LIMIT ".$_GET['random']."";

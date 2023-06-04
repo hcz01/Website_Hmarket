@@ -183,7 +183,7 @@ $(document).ready(function(){
 });
 
      
-      $( "#profileTemplete" ).on( "submit", function( event ) {
+  $( "#profileTemplete" ).on( "submit", function( event ) {
         event.preventDefault();
         var steamid=$("#edit-stemaid").val();
         var API_KEY=$("#edit-API_KEY").val();
@@ -211,7 +211,7 @@ $(document).ready(function(){
         
       });
 
-      $("#CreditTemplete" ).on( "submit", function( event ) {
+  $("#CreditTemplete" ).on( "submit", function( event ) {
         event.preventDefault();
         var cdkInput=$("#cdkInput").val();
         $.ajax({
@@ -323,7 +323,7 @@ $(document).ready(function(){
     removeCookie("jwt");
     window.location.reload();
   });
-      //validate jwt
+      //validate jwt when ask new request
       VerifyJWT();
     
 });
@@ -395,46 +395,44 @@ function RandomItems(){
     return urlObj.toString();
 }
 
-//GET ./Database/Viewitems.php?Category=Category
-function FindCategory(Category){
-    if(inputParams !== null)
-    {
-        inputParams.append('Category', Category);
-        return inputParams;
+
+async function buildItem(cards) {
+  var ul = $("<ul>");
+  for (var i = 0; i < cards.length; i++) {
+    var card = cards[i];
+    var li = $("<li>").addClass("card").attr("width", 208).attr("height", 228);
+    var img = $("<img>").attr("src", card.image).attr("width", 210).attr("height", 138);
+    var h6 = $("<h6>").text(truncateText(card.name, 20));
+    var p = $("<p>");
+    li.append(img, h6, p);
+    ul.append(li);
+
+    try {
+      await (function (categoryId) {
+        return new Promise((resolve) => {
+          getPrice(categoryId, (price) => {
+            p.text(price + Coin);
+            resolve();
+          });
+        });
+      })(card.id);
+
+      (function (categoryId) {
+        h6.click(function () {
+          window.location.href = "goods?id=" + categoryId;
+        });
+      })(card.id);
+    } catch (error) {
+      console.error("Error fetching price:", error);
+      p.text("N/A");
     }
-   
+
+    if ((i + 1) % 5 == 0) {
+      ul.append("<br>");
+    }
+  }
+  $("#list_card").append(ul);
 }
-
-//GET ./Database/Viewitems.php?name=name
-function FindSpecificItem(name){
-    if(inputParams !== null)
-    {
-        inputParams.append('name', name);
-        return inputParams;
-    }
-}
-
-
-function buildItem(cards){
-    var ul = $("<ul>");
-    for (var i = 0; i < cards.length; i++) {
-        var card = cards[i]; 
-        //a redirect goods info
-        var li = $("<li>").addClass("card").attr("width",208).attr("height",228);
-        var img = $("<img>").attr("src", card.image).attr("width",210).attr("height",138);
-        var h6 = $("<h6>").text(truncateText(card.name, 20));
-        var p = $("<p>").text(card.id);
-        li.append(img, h6, p);
-        ul.append(li);
-        if ((i + 1) % 5 == 0) {
-            ul.append("<br>");
-        }
-        }
-        $("#list_card").append(ul);
-        
-
-        
-    }
     async function buildInventoryItem(cards) {
       var ul = $("<ul>");
       for (var i = 0; i < cards.length; i++) {
@@ -807,18 +805,7 @@ function checkCookie(){
 function removeCookie(cookieName) {
   document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
 }
-//setting part
-function checkSteamID($user_id){
 
-}
-
-function associateSteamAccount($steam_ID,$API_Key,$trade_offer_access_url){
-
-}
-
-function UserSetting($email){
-
-}
 
 //credit part
 function getCredit($user_id){
@@ -868,9 +855,7 @@ function addCredit($key,$user_id){
 
 }
 
-function MomentCredit($user_id,$id_market){
 
-}
 
 function PassCredit($user_id,$value){
 
@@ -1478,9 +1463,6 @@ async function BuildMarketTable(cards){
 
 }
 
-function buildProfilTable(){
-  
-}
 
 
 

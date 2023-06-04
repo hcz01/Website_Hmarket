@@ -1,6 +1,6 @@
 <div id="logo"><img src="picture/Hmarket.png" width="77" height="21"> </div> 
     <div id="nav"> <ul>
-        <li>Home</li>
-        <li>Market</li>
+        <li><a href="home">Home</a></li>
+        <li><a href="market">Market</a></li>
         <li>News</li>
     </ul></div>

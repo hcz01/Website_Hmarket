@@ -1,14 +1,12 @@
 <?php
-namespace app\Steam\Web;
- 
+namespace app\Controller;
+
 class CSGOInventory {
     private $inventoryUrl;
-    private $proxy;
-    private $port;
-    public function __construct($inventoryUrl,$proxy,$port) {
+   // private $proxy;
+   // private $port;
+    public function __construct($inventoryUrl) {
         $this->inventoryUrl = $inventoryUrl;
-        $this->proxy = $proxy;
-        $this->port = $port;
     }
 
     public function getInventory() {
@@ -28,14 +26,20 @@ class CSGOInventory {
         ]);
         */
 
-        $json = file_get_contents($this->inventoryUrl);
+        try {
+            $json = @file_get_contents($this->inventoryUrl);
         
+            if ($json === false) {
+                return null;
+            }
+        
+            return $json;
 
-        if ($json === false) {
-            // Handle error here, such as logging or displaying an error message
-            return array();
+        } catch (\Exception $e) {
+            // Handle the exception when the "HTTP 429 Too Many Requests" error occurs
+            return null;
         }
-        return $json;
+      
 
 
     }
@@ -90,6 +94,7 @@ class CSGOInventory {
                     }
 
                     $item= array(
+                        'asset'=> $asset['classid'] ?? null,
                         'classid' => $description['classid'] ?? null,
                         'instanceid' => $description['instanceid'] ?? null,
                         'market_name' => $description['market_name'] ?? null,
@@ -107,30 +112,5 @@ class CSGOInventory {
         return  json_encode($items);
     }
 }
-/*
-$inventoryUrl = "http://steamcommunity.com/inventory/76561199125042505/730/2?l=en&count=1000";
-$proxy="65.109.231.55";
-$port="8080";
 
-$inventory = new CSGOInventory($inventoryUrl,$proxy,$port);
-$result = $inventory->getInventory();
-if($result!=null){
-$result=json_decode($result,true);
-    $output = array();
-// Output the result
-foreach ($result as $weapon) {
-    $weaponData = array(
-        'market_name' => $weapon['market_name'],
-        'icon_url' => $weapon['icon_url']
-    );
-    $output[] = $weaponData;
-}
 
-$jsonOutput = json_encode($output);
-
-// Output the JSON
-echo $jsonOutput;
-}else{
-    echo "failed";
-}
-*/

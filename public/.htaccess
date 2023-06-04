@@ -1,9 +1,11 @@
-# Turn rewrite engine on
 Options +FollowSymlinks
 RewriteEngine on
 
-# map neat URL to internal URL
+# Redirect goods/{id} to ../app/View/goods.php
+#RewriteRule ^goods/([0-9]+)$ ../app/View/goods.php?id=$1 [QSA,L]
+
+# Map neat URL to internal URL
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+
 RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
-# RewriteRule ^goods/([0-9]+)/$   RestController.php?view=single&id=$1 [nc,qsa]

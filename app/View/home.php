@@ -24,7 +24,11 @@ include 'components/nav-1_ano.php';
 include 'components/login.php'; 
 ?>
 
-<div id="News"></div>    
+<div id="News">
+<?php 
+include 'components/slidesShow.php'; 
+?>
+</div>    
 <div id="Area" >
    <div id="list_card"></div>
 </div>

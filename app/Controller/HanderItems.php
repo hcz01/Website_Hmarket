@@ -16,7 +16,7 @@ class Handleritem
         if ($connection->connect_error) {
             die("Connection failed: " . $connection->connect_error);
         }
-        $sql = "SELECT * FROM `goods` WHERE `id_user` = $id_user LIMIT 0,20";
+        $sql = "SELECT * FROM `goods` WHERE `id_user` = $id_user LIMIT 0,32";
         $result = $connection->query($sql);
         if ($result->num_rows > 0) {
             $items = [];

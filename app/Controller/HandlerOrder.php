@@ -1,6 +1,6 @@
 <?php
 namespace app\Controller;
-
+use app\Controller\HanderUser;
 use mysqli;
 
 class Handlerorder
@@ -140,6 +140,39 @@ class Handlerorder
         
         return $result;
     }
+
+    function CompleteOrder($order_id, $state_order, $userid_customer, $userid_seller, $price)
+{
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $db = "hmarket";
+    $connection = new mysqli($servername, $username, $password, $db);
+    if ($connection->connect_error) {
+        die("Connection failed: " . $connection->connect_error);
+    }
+
+    $connection->begin_transaction();
+
+    $sql1 = "UPDATE user SET credit = credit - $price WHERE id_user = $userid_customer";
+    $sql2 = "UPDATE user SET credit = credit + $price WHERE id_user = $userid_seller";
+    $sql3 = "UPDATE skin_order SET order_state = '$state_order' WHERE OrderID = $order_id";
+
+    echo $sql1 . "<br>" . $sql2 . "<br>" . $sql3 . "<br>";
+
+    try {
+        $connection->query($sql1);
+        $connection->query($sql2);
+        $connection->query($sql3);
+        $connection->commit();
+        $connection->close();
+        return true;
+    } catch (\mysqli_sql_exception $e) {
+        $connection->rollback();
+        echo "Error: " . $e->getMessage();
+        return false;
+    }
+}
 
     
 }

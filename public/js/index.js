@@ -382,8 +382,17 @@ function getUserinfo(){
   });
 }
 
-
-
+function ShowPass(){
+  var x = document.getElementById("password");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+function refresh(){
+  location.reload();
+}
 //GET ./Database/Viewitems.php?random=20  return 20 random items info
 function RandomItems(){
     //default no params 

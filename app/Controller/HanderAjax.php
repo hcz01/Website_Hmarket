@@ -338,9 +338,14 @@ class HanderAjax {
                     $userid_customer = $result['userid_customer'];
                     $userid_seller = $result['userid_seller'];
                     $price = $result['price'];
+                    // version with transaction thks tips from my Grand Friend Oscar
+                    $result=$Handlerorder->CompleteOrder($_POST['id_order'],"completed",$userid_customer,$userid_seller,$price);
+                    // without transaction version 
+                    /*
                     $HandlerUser->UpdateCredit("-".$price,$userid_customer);
                     $HandlerUser->UpdateCredit("+".$price,$userid_seller);
                     $result=$Handlerorder->Update($_POST['id_order'],"completed");
+                    */
                     http_response_code(200);
                     echo $result;
                 }else{
